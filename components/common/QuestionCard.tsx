@@ -25,10 +25,10 @@ const QuestionCard = ({
     createdAt,
   }: propsType) => {
   return (
-    <div className='flex flex-col background-light900_dark200 p-7 rounded-lg shadow-sm'>
-      <p className='max-sm:flex hidden text-dark400_light700 text-xs mb-1'>{getTimestamp(createdAt)}</p>
-      <h1 className='line-clamp-1 text-dark100_light900 h3-bold'>{title}</h1>
-      <div className='flex gap-2 mt-3 mb-4'>
+    <div className='background-light900_dark200 flex flex-col rounded-lg p-7 shadow-sm'>
+      <p className='text-dark400_light700 mb-1 hidden text-xs max-sm:flex'>{getTimestamp(createdAt)}</p>
+      <h1 className='text-dark100_light900 h3-bold line-clamp-1'>{title}</h1>
+      <div className='mb-4 mt-3 flex gap-2'>
       {
             tags.map((item)=>(
                 <RenderTags
@@ -41,7 +41,7 @@ const QuestionCard = ({
         }
       </div>
 
-      <div className='max-md:flex-col flex justify-between gap-2'>
+      <div className='flex justify-between gap-2 max-md:flex-col'>
         <Metric
           imgUrl="/assets/icons/avatar.svg"
           alt="User"

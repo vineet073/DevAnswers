@@ -52,7 +52,7 @@ export default function Home() {
         
       </div>
 
-      <div className="flex max-sm:flex-col sm:items-center gap-4">
+      <div className="flex gap-4 max-sm:flex-col sm:items-center">
         <LocalSearchBar
           route="/"
           iconPosition="left"
