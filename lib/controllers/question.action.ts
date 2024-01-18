@@ -2,9 +2,10 @@
 
 import Question from "@/models/question.model";
 import { connectDatabase } from "../database/connectDatabase"
-import { CreateQuestionParams } from "./shared.types";
+import { CreateQuestionParams, GetQuestionsParams } from "./shared.types";
 import Tag from "@/models/tag.model";
 import { revalidatePath } from "next/cache";
+import User from "@/models/user.model";
 
 export const createQuestion=async(data:CreateQuestionParams)=>{
     try {
@@ -38,5 +39,26 @@ export const createQuestion=async(data:CreateQuestionParams)=>{
         revalidatePath(path);
     } catch (error) {
         
+    }
+}
+
+export const getQuestions=async(questionData:GetQuestionsParams)=>{
+    try {
+        connectDatabase();
+
+        const questions=await Question.find({})
+        .sort({createdAt:-1})
+        .populate(
+        {    path:"author",model:User}
+        )
+        .populate({
+            path:"tags", model:Tag
+        }).exec();
+
+        return {questions};
+
+    } catch (error) {
+        console.log("error while getting questions:",error);
+        throw error;        
     }
 }
