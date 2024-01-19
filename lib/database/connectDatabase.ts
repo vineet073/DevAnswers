@@ -17,7 +17,7 @@ export const connectDatabase = async () => {
     try {
 
         await mongoose.connect(mongoDbUrl,{
-            dbName:'Project 0'
+            dbName:'DevOverFlow'
         }).then(()=>{console.log("db connection successfully established");
         isConnected=true;})
         .catch((error)=>{
