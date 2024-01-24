@@ -64,6 +64,8 @@ export async function POST(req: Request) {
         picture:image_url
     })
 
+    console.log("new user created",newUser);
+
     return NextResponse.json({ message:'OK', user:newUser});
   }
 

@@ -7,12 +7,14 @@ import React from 'react'
 const AskQuestion = async () => {
 
   const {userId}=auth();
+  console.log("userId:",userId);
 
   if(!userId){
     redirect('/sign-in');
   }
 
   const mongoUser=await getUserByClerkId(userId);
+  console.log("mongoUser:",mongoUser);
 
   return (
     <div className='p-4'>

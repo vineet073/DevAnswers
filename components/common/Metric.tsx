@@ -5,7 +5,7 @@ import React from 'react';
 interface propsType{
     alt:string;
     imgUrl:string;
-    value:string;
+    value?:string;
     title:string;
     href?:string;
     isAuthor?:boolean;

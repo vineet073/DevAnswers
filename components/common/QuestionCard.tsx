@@ -2,6 +2,7 @@ import { formatAndDivideNumber, getTimestamp } from '@/lib/utility';
 import React from 'react';
 import RenderTags from './RenderTags/RenderTags';
 import Metric from './Metric';
+import Link from 'next/link';
 
 interface propsType{
     _id:string;
@@ -27,7 +28,9 @@ const QuestionCard = ({
   return (
     <div className='background-light900_dark200 flex flex-col rounded-lg p-7 shadow-sm'>
       <p className='text-dark400_light700 mb-1 hidden text-xs max-sm:flex'>{getTimestamp(createdAt)}</p>
-      <h1 className='text-dark100_light900 h3-bold line-clamp-1'>{title}</h1>
+      <Link href={`/questions/${_id}`}>
+        <h1 className='text-dark100_light900 h3-bold line-clamp-1'>{title}</h1>
+      </Link>
       <div className='mb-4 mt-3 flex gap-2'>
       {
             tags.map((item)=>(
@@ -43,7 +46,7 @@ const QuestionCard = ({
 
       <div className='flex justify-between gap-2 max-md:flex-col'>
         <Metric
-          imgUrl="/assets/icons/avatar.svg"
+          imgUrl={author.picture}
           alt="User"
           value={author.name}
           title={` - asked ${getTimestamp(createdAt)}`}
