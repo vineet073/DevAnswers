@@ -1,3 +1,4 @@
+/* eslint-disable tailwindcss/no-custom-classname */
 import AnswerTab from '@/components/common/AnswerTab/AnswerTab';
 import QuestionTab from '@/components/common/QuestionTab/QuestionTab';
 import Stats from '@/components/common/UserStats/Stats';
@@ -42,9 +43,9 @@ const ProfilePage = async({params,searchParams}:URLProps) => {
 
                 <p className='mb-3'>@{userInfo.user.username}</p>
 
-                <div className='text-sm justify-between flex max-md:flex-col'>
+                <div className='flex justify-between text-sm max-md:flex-col'>
                     {userInfo.user.portfolioWebSite && (
-                        <Link href={userInfo.user.portfolioWebSite} className='flex items-center text-accent-blue font-medium gap-1'>
+                        <Link href={userInfo.user.portfolioWebSite} className='flex items-center gap-1 font-medium text-accent-blue'>
                             <FaLink/>
                             Portfolio Website
                         </Link>

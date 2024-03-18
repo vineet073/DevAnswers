@@ -22,6 +22,7 @@ import { Badge } from '@/components/ui/badge';
 import Image from 'next/image';
 import { createQuestion, editQuestion } from '@/lib/controllers/question.action';
 import { usePathname, useRouter } from 'next/navigation';
+import { ITag } from '@/models/tag.model';
 
 
 interface QuestionProps {
@@ -43,8 +44,8 @@ const AskQuestionForm = ({mongoUserId,questionData,type}:QuestionProps) => {
     resolver: zodResolver(questionSchema),
     defaultValues:{ 
       title: questionDetails?.title || '',
-      explanation:questionDetails?.content || '',
-      tags: questionDetails?.tags.map(tag => tag.name) || [],
+      explanation: questionDetails?.content || '',
+      tags: questionDetails?.tags.map((tag: ITag) => tag.name) || [],
     }  
   })
   

@@ -2,17 +2,17 @@ import { formatAndDivideNumber, getTimestamp } from '@/lib/utility';
 import React from 'react';
 import Metric from './Metric';
 import Link from 'next/link';
-import ParseHTML from './ParseHTML/ParseHTML';
 import { SignedIn } from '@clerk/nextjs';
 import ActionButtons from './ActionButtons';
+import { IQuestion } from '@/models/question.model';
 
 interface propsType{
     _id:string;
     content:string;
-    author:{_id:string;name:string;picture:string};
+    author:{_id:string;name:string;picture:string,clerkId:string};
     upvotes:number;
     createdAt:Date;
-    question:unknown,
+    question:IQuestion,
     clerkId?:string|null;
 }
 

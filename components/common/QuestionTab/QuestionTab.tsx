@@ -9,7 +9,7 @@ interface QuestionTabProps {
   }
 
 const QuestionTab = async(params:QuestionTabProps) => {
-    const {userId,clerkId,searchProps}=params;
+    const {userId,clerkId}=params;
     const result=await getQuestionsByUserId({userId});
   return (
     <div>
