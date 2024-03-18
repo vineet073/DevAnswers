@@ -7,7 +7,7 @@ import MobileNav from './MobileNav'
 
 const Navbar = () => {
   return (
-    <nav className='flex-between background-light900_dark200 fixed z-50 w-full gap-5 py-5 px-8 
+    <nav className='flex-between background-light900_dark200 fixed z-50 w-full gap-5 px-8 py-5 
     shadow-light-300 dark:shadow-none'>
       <Link href='/'  className='flex items-center gap-1'>
         <Image
@@ -25,7 +25,7 @@ const Navbar = () => {
       {/* global-search */}
 
       <div className='flex'>
-          <Theme/>
+        <Theme/>
         <SignedIn>
           <UserButton
           afterSignOutUrl='/'
@@ -39,6 +39,7 @@ const Navbar = () => {
           }}/>
         </SignedIn>
       </div>
+      
       <MobileNav/>
 
     </nav>

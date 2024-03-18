@@ -2,15 +2,15 @@ import { Schema, models, model, Document } from 'mongoose';
 
 // create tag interface extends mongoose document
 export interface IInteraction extends Document {
-  user: Schema.Types.ObjectId; // reference to user
+  user: Schema.Types.ObjectId; 
   action: string;
-  question: Schema.Types.ObjectId; // reference to question
-  answer: Schema.Types.ObjectId; // reference to answer
-  tags: Schema.Types.ObjectId[]; // reference to tag
+  question: Schema.Types.ObjectId; 
+  answer: Schema.Types.ObjectId; 
+  tags: Schema.Types.ObjectId[];
   createdAt: Date;
 }
 
-const interactionSchema = new Schema({
+const interactionSchema = new Schema<IInteraction>({
   user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   action: { type: String, required: true },
   question: {
@@ -30,7 +30,6 @@ const interactionSchema = new Schema({
   createdAt: { type: Date, default: Date.now }
 });
 
-const Interaction =
-  models.Interaction || model('Interaction', interactionSchema);
+const Interaction = models.Interaction || model('Interaction', interactionSchema);
 
 export default Interaction;

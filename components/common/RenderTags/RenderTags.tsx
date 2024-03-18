@@ -14,16 +14,16 @@ const RenderTags = ({_id,name,totalQuestions,showCount,customClasses}:PropsType)
   return (
    
     <Link href={`/tags/${_id}`} className='flex justify-between'>
-    <Badge className={`text-light400_light500
-    rounded-md px-4 py-2 uppercase ${customClasses}`}>
+      <Badge className={`text-light400_light500
+      rounded-md px-4 py-2 uppercase ${customClasses}`}>
         {name}
-    </Badge>  
+      </Badge>  
 
-    {
+      {
         showCount && (
-            <p className='small-medium text-dark500_light700'>{totalQuestions}</p>
+          <p className='small-medium text-dark500_light700'>{totalQuestions}</p>
         )
-    }
+      }
     </Link>
    
   )

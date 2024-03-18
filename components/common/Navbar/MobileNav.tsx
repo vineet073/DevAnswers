@@ -29,8 +29,7 @@ function NavContent() {
               href={item.route}
               className={`${
                 isActive ? "primary-gradient rounded-lg" : ""
-              } text-dark300_light900 flex
-                            items-center justify-start gap-4 bg-transparent p-4`}
+              } text-dark300_light900 flex items-center justify-start gap-4 bg-transparent p-4`}
             >
               <Image
                 src={item.imgURL}
@@ -66,8 +65,8 @@ const MobileNav = () => {
 
       <SheetContent
         side="left"
-        className="background-light900_dark200 border-none"
-      >
+        className="background-light900_dark200 border-none">
+
         <Link href="/" className="flex items-center gap-1">
           <Image
             src="/assets/images/site-logo.svg"
@@ -83,6 +82,7 @@ const MobileNav = () => {
         </Link>
 
         <div className="flex flex-col gap-5">
+
           <SheetClose asChild>
             <NavContent />
           </SheetClose>
@@ -102,14 +102,14 @@ const MobileNav = () => {
             <SheetClose asChild>
               <Link href="/sign-up">
                 <Button
-                  className="small-medium light-border-2 btn-tertiary text-dark400_light900
-                                min-h-[41px] w-full rounded-lg px-4 py-3 shadow-none"
-                >
+                  className="small-medium light-border-2 btn-tertiary text-dark400_light900 min-h-[41px] w-full 
+                  rounded-lg px-4 py-3 shadow-none">
                   Sign Up
                 </Button>
               </Link>
             </SheetClose>
           </SignedOut>
+
         </div>
       </SheetContent>
     </Sheet>

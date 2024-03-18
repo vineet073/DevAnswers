@@ -23,10 +23,9 @@ const Filters = ({filter,otherClasses,containerClasses}:filterTypes) => {
     <div className={`${containerClasses}`}>
       <Select>
 
-        <SelectTrigger className={`body-regular light-border 
-        background-light800_dark300 
+        <SelectTrigger className={`body-regular light-border background-light800_dark300 
         text-dark500_light700 border px-5 py-2.5 ${otherClasses}`}>
-            <SelectValue placeholder="Select a Filter" />
+          <SelectValue placeholder="Select a Filter" />
         </SelectTrigger>
 
         <SelectContent>

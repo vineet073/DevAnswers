@@ -21,7 +21,7 @@ const UserCard = async({user}:PropsType) => {
 
   return (
     <Link href={`/profile/${user.clerkId}`} className=''>
-      <div className='background-light900_dark300 rounded-md shadow-sm dark:shadow-none p-7 flex flex-col items-center justify-center w-[220px]'>
+      <div className='background-light900_dark300 flex w-[220px] flex-col items-center justify-center rounded-md p-7 shadow-sm dark:shadow-none'>
         <Image
         src={user.picture}
         alt="user-profile-picture"
@@ -32,7 +32,7 @@ const UserCard = async({user}:PropsType) => {
 
         <p className='text-dark300_light900 h3-bold my-2 line-clamp-1'>{user.name}</p>
         <p className='text-dark500_light500 text-sm'>@ {user.username}</p>
-        <div className='flex gap-1 mt-2'>
+        <div className='mt-2 flex gap-1 flex-wrap'>
             {
                 result.length>0 && (
                     result.map((item)=>(

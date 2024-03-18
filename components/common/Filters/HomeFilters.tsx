@@ -7,7 +7,7 @@ import React from 'react'
 const HomeFilters = () => {
     const active="newest"
   return (
-    <div className='max-md:hidden flex gap-4'>
+    <div className='flex gap-4 max-md:hidden'>
       {
         HomePageFilters.map((item)=>(
             <Button

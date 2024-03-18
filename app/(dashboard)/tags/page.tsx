@@ -1,5 +1,4 @@
 import Filters from '@/components/common/Filters/Filters'
-import RenderTags from '@/components/common/RenderTags/RenderTags'
 import LocalSearchBar from '@/components/common/SearchBars/LocalSearchBar'
 import { TagFilters } from '@/constants/filterData'
 import { getAllTags } from '@/lib/controllers/tag.actions'
@@ -13,7 +12,7 @@ const page = async() => {
   return (
     <div>
         
-        <p className="h1-bold text-dark100_light900 max-sm:mt-4 mb-9">All Tags</p>       
+        <p className="h1-bold text-dark100_light900 mb-9 max-sm:mt-4">All Tags</p>       
 
         <div className="flex gap-4 max-sm:flex-col sm:items-center">
             <LocalSearchBar
@@ -35,12 +34,13 @@ const page = async() => {
                 (result?.tags.length ?? 0) > 0 ? (
                     result?.tags.map((item)=>(
                        <div key={item._id}>
-                         <Link href={`/tags/${item._id}`} className=''>
+                         <Link href={`/tags/${item._id}`}>
                             <div className='background-light900_dark200 flex w-[220px] flex-col items-center justify-center rounded-md p-7 shadow-sm dark:shadow-none'>
                                 
-                            <p className="paragraph-semibold text-dark300_light900 background-light800_dark400 mb-3 rounded-sm px-4 py-1">
-                                {item.name}
-                            </p>                                <p>{item?.description}</p>
+                                <p className="paragraph-semibold text-dark300_light900 background-light800_dark400 mb-3 rounded-sm px-4 py-1">
+                                    {item.name}
+                                </p>
+                                <p>{item?.description}</p>
                                 <p className='text-dark400_light500 text-xs'><span className='text-sm text-primary-500'>{item.questions.length}+</span> Questions</p>
                             </div>
                         </Link>

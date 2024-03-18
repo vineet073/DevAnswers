@@ -18,8 +18,8 @@ const Theme = () => {
   return (
     <div>
       <Menubar className='relative border-none bg-transparent shadow-none'>
-        <MenubarMenu>
 
+        <MenubarMenu>
             <MenubarTrigger className="focus:bg-light-900 data-[state=open]:bg-light-900
           dark:focus:bg-dark-200 dark:data-[state=open]:bg-dark-200">
                 {
@@ -62,7 +62,7 @@ const Theme = () => {
                         alt={item.value}
                         width={16}
                         height={16}
-                        className={`${mode===item.value}` && "active-theme"}
+                        className={`${mode===item.value && "active-theme"}` }
                       />
 
                       <p
@@ -75,7 +75,8 @@ const Theme = () => {
             }
             </MenubarContent>
         </MenubarMenu>
-    </Menubar>
+
+      </Menubar>
 
     </div>
   )

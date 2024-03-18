@@ -7,7 +7,7 @@ export const connectDatabase = async () => {
     const mongoDbUrl = process.env.NEXT_PUBLIC_MONGODB_URL;
 
     if(!mongoDbUrl){
-        return console.log('MongoDB URI is missing');
+        return console.log('MongoDB URL is missing');
     }
 
     if(isConnected){

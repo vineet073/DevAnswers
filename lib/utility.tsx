@@ -1,3 +1,5 @@
+import qs from "query-string";
+
 export const getTimestamp = (createdAt: Date): string => {
     const now = new Date();
     const timeDifference = now.getTime() - createdAt.getTime();
@@ -44,3 +46,48 @@ export const formatAndDivideNumber = (number: number): string => {
       return `${number}`;
     }
 };
+
+export function formatDate(date:Date):string {
+  const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  
+  return `${monthNames[date.getMonth()]} ${date.getFullYear()}`;
+};
+
+interface props{
+  params:string;
+  key:string;
+  value:string|null;
+}
+export function formUrlQuery({params,key,value}:props):string{
+  const currentUrl=qs.parse(params);
+  currentUrl[key]=value;
+
+  return qs.stringifyUrl({
+    url:window.location.pathname,
+    query:currentUrl
+  },{
+    skipNull:true
+  })
+
+}
+
+interface RemoveQueryProps{
+  params:string;
+  keys:string[];
+}
+export function removeUrlQuery({params,keys}:RemoveQueryProps):string{
+  const currentUrl=qs.parse(params);
+
+  keys.forEach(key=>{
+    delete currentUrl[key]
+  });
+
+  return qs.stringifyUrl({
+    url:window.location.pathname,
+    query:currentUrl
+  },{
+    skipNull:true
+  })
+
+}

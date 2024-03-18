@@ -14,7 +14,7 @@ const AskQuestion = async () => {
   }
 
   const mongoUser=await getUserByClerkId(userId);
-  console.log("mongoUser:",mongoUser);
+  // console.log("mongoUser:",mongoUser);
 
   return (
     <div className='p-4'>

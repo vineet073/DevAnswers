@@ -27,11 +27,7 @@ const spaceGrotesk = Space_Grotesk({
   variable: "--font-spaceGrotesk",
 });
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({children}: {children: React.ReactNode}) {
   return (
     <html lang="en">
       <body className={`${inter.variable} ${spaceGrotesk.variable} background-light850_dark100 `}>

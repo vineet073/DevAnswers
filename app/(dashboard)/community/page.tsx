@@ -13,7 +13,7 @@ const page = async() => {
   return (
     <div>
         
-        <p className="h1-bold text-dark100_light900 max-sm:mt-4 mb-9">All Users</p>       
+        <p className="h1-bold text-dark100_light900 mb-9 max-sm:mt-4">All Users</p>       
 
         <div className="flex gap-4 max-sm:flex-col sm:items-center">
             <LocalSearchBar
@@ -30,7 +30,7 @@ const page = async() => {
             />
         </div>
 
-        <div className='mt-9 flex flex-wrap items-center gap-4 mx-auto'>
+        <div className='mx-auto mt-9 flex flex-wrap items-center gap-4'>
             {
                 result.users.length>0 ? (
                     result.users.map((item)=>(

@@ -6,12 +6,14 @@ import LocalSearchBar from "@/components/common/SearchBars/LocalSearchBar";
 import { Button } from "@/components/ui/button";
 import { HomePageFilters } from "@/constants/filterData";
 import { getQuestions } from "@/lib/controllers/question.action";
+import { SearchParamsProps } from "@/types/types";
 import Link from "next/link";
 
 
-export default async function Home() {
+export default async function Home({searchParams}:SearchParamsProps) {
+  const searchQuery=searchParams.q;
   
-  const result=await getQuestions({});
+  const result=await getQuestions({searchQuery});
 
   return (
     <div className="flex w-full flex-col gap-9">
@@ -62,7 +64,7 @@ export default async function Home() {
             title={item.title}
             tags={item.tags}
             author={item.author}
-            upvotes={item.upvotes}
+            upvotes={item.upvotes.length}
             views={item.views}
             createdAt={item.createdAt}
             answers={item.answers}/>
