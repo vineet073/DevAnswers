@@ -12,7 +12,7 @@ const AnswerTab = async(params:AnswerTabProps) => {
     const {userId,clerkId}=params;
     const result=await getAnswersByUserId({userId});
   return (
-    <div>
+    <div className='mt-5 flex flex-col gap-4'>
         {
              result.answers.map((item)=>(
                 <AnswerCard

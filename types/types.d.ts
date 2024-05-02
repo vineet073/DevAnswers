@@ -36,8 +36,8 @@ export interface SearchParamsProps {
 
 export interface URLProps {
   params: {
-      [x: string]: any; id: string 
-};
+    [x: string]: any; id: string 
+  };
   searchParams: { [key: string]: string | undefined };
 }
 

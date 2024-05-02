@@ -3,15 +3,15 @@ import mongoose from 'mongoose';
 let isConnected: boolean=false;
 
 export const connectDatabase = async () => {
-    mongoose.set('strictQuery',true);
+    // mongoose.set('strictQuery',true);
     const mongoDbUrl = process.env.NEXT_PUBLIC_MONGODB_URL;
 
     if(!mongoDbUrl){
-        return console.log('MongoDB URL is missing');
+        return;
     }
 
     if(isConnected){
-        return console.log('Database is already connected');
+        return ;
     }
 
     try {

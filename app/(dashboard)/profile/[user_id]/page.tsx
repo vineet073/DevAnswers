@@ -79,7 +79,7 @@ const ProfilePage = async({params,searchParams}:URLProps) => {
         </div>
 
         <div>
-           <Stats/>
+           <Stats badges={userInfo.badgeCounts} totalQuestions={userInfo.questionCount} totalAnswers={userInfo.answerCount} reputation={userInfo.reputation}/>
         </div>
 
         <Tabs defaultValue="topPosts" className="">

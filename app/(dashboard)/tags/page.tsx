@@ -1,13 +1,18 @@
 import Filters from '@/components/common/Filters/Filters'
+import Pagination from '@/components/common/Pagination/Pagination'
 import LocalSearchBar from '@/components/common/SearchBars/LocalSearchBar'
 import { TagFilters } from '@/constants/filterData'
 import { getAllTags } from '@/lib/controllers/tag.actions'
+import { SearchParamsProps } from '@/types/types'
 import Link from 'next/link'
 import React from 'react'
 
-const page = async() => {
+const page = async({searchParams}:SearchParamsProps) => {
 
-    const result=await getAllTags({});
+    const searchQuery=searchParams.q;
+    const filter=searchParams.filter;
+    const page = searchParams?.page ? +searchParams.page : 1;
+    const result=await getAllTags({searchQuery,filter,page});
 
   return (
     <div>
@@ -16,7 +21,7 @@ const page = async() => {
 
         <div className="flex gap-4 max-sm:flex-col sm:items-center">
             <LocalSearchBar
-                route="/"
+                route="/tags"
                 iconPosition="left"
                 imgSrc="/assets/icons/search.svg"
                 placeholder="Search for questions"
@@ -55,6 +60,10 @@ const page = async() => {
                     </div>
                 )
             }
+        </div>
+
+        <div className='mt-10'>
+            <Pagination pageNumber={page} isNext={result.isNext}/>
         </div>
 
     </div>

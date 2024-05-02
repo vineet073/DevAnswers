@@ -27,6 +27,7 @@ const LocalSearchBar = ({
 
     const query=searchParams.get('q');
     const [search,setSearch]=useState(query || '');
+
     useEffect(()=>{
       const debounceFn=setTimeout(()=>{
         if(search){
@@ -37,15 +38,13 @@ const LocalSearchBar = ({
           });
           router.push(newUrl,{scroll:false});
         }else{
-          if(pathname===route){
-            const newUrl=removeUrlQuery({
-              params:searchParams.toString(),
-              keys:['q']          
-            })
-            router.push(newUrl,{scroll:false});
-          }          
+          const newUrl=removeUrlQuery({
+            params:searchParams.toString(),
+            keys:['q']          
+          })
+          router.push(newUrl,{scroll:false});
         }
-      });
+      },300);
       return ()=>clearTimeout(debounceFn);
     },[router,pathname,searchParams,route,query,search]);
 

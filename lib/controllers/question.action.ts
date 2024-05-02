@@ -41,6 +41,8 @@ export const createQuestion=async(data:CreateQuestionParams)=>{
             $push:{tags:{$each:tagDocuments}}
         });
 
+        await User.findByIdAndUpdate(author, { $inc: { reputation: 5 } });
+
         revalidatePath(path);
     } catch (error) {
         
@@ -85,6 +87,8 @@ export const editQuestion=async(data:EditQuestionParams)=>{
 
 export const getQuestions=async(questionData:GetQuestionsParams)=>{
     const {searchQuery,filter,page=1,pageSize=10}=questionData;
+    // const actualPage = searchQuery ? 1 : page || 1;
+    const skipAmount = (page - 1) * pageSize;
     try {
         connectDatabase();
 
@@ -95,16 +99,40 @@ export const getQuestions=async(questionData:GetQuestionsParams)=>{
                 {content:{$regex:new RegExp(searchQuery,'i')}}
             ]
         }
+
+        let sortOptions={};
+        switch(filter){
+            case 'newest':
+                sortOptions={createdAt:-1};
+                break;
+            
+            case 'frequent':
+                sortOptions={views:-1};
+                break;
+            
+            case 'unanswered':
+                query.answers={$size:0};
+                break;
+            
+            default:
+                break;
+        }   
+
         const questions=await Question.find(query)
-        .sort({createdAt:-1})
         .populate(
         {    path:"author",model:User}
         )
         .populate({
             path:"tags", model:Tag
-        }).exec();
+        }).sort(sortOptions)
+        .skip(skipAmount)
+        .limit(pageSize)
+        .exec();
 
-        return {questions};
+        const totalQuestions=await Question.countDocuments(query);
+        const isNext=totalQuestions > questions.length+skipAmount;
+
+        return {questions,isNext};
 
     } catch (error) {
         console.log("error while getting questions:",error);
@@ -141,27 +169,36 @@ export const upVoteQuestion=async(questionData:QuestionVoteParams)=>{
         connectDatabase();
 
         const{questionId,userId,hasupVoted,hasdownVoted,path}=questionData;
+        const {question}=await getQuestionsById({questionId});
+        
+        if(question.author._id.toString() !==userId.toString()){
+            let query={};
+            if(hasupVoted){
+                query={$pull:{upvotes:userId}};
+            }else if(hasdownVoted){
+                query={
+                    $pull:{downvotes:userId},
+                    $addToSet:{upvotes:userId}
+                }
+            }else{
+                query={$addToSet:{upvotes:userId}}
+            };
 
-        let query={};
-        if(hasupVoted){
-            query={$pull:{upvotes:userId}};
-        }else if(hasdownVoted){
-            query={
-                $pull:{downvotes:userId},
-                $addToSet:{upvotes:userId}
+            const updatedQuestionDetails=await Question.findByIdAndUpdate(
+                questionId,query,{new:true}
+            );
+            if(!updatedQuestionDetails){
+                throw new Error("Question not found");
             }
-        }else{
-            query={$addToSet:{upvotes:userId}}
-        };
 
-        const updatedQuestionDetails=await Question.findByIdAndUpdate(
-            questionId,query,{new:true}
-        );
-        if(!updatedQuestionDetails){
-            throw new Error("Question not found");
+            await User.findByIdAndUpdate(question.author, {
+                $inc: { reputation: hasupVoted ? -10 : 10 }
+            });
+            
+
+            revalidatePath(path);
         }
-
-        revalidatePath(path);
+        
     } catch (error:unknown) {
         console.log("error while upvoting question:",error);
         throw error;
@@ -173,27 +210,36 @@ export const downVoteQuestion=async(questionData:QuestionVoteParams)=>{
         connectDatabase();
 
         const{questionId,userId,hasupVoted,hasdownVoted,path}=questionData;
+        const {question}=await getQuestionsById({questionId});
+        
+        if(question.author._id.toString() !==userId.toString()){
+            let query={};
+            if(hasdownVoted){
+                query={$pull:{downvotes:userId}};
+            }else if(hasupVoted){
+                query={
+                    $pull:{upvotes:userId},
+                    $addToSet:{downvotes:userId}
+                }
+            }else{
+                query={$addToSet:{downvotes:userId}}
+            };
 
-        let query={};
-        if(hasdownVoted){
-            query={$pull:{downvotes:userId}};
-        }else if(hasupVoted){
-            query={
-                $pull:{upvotes:userId},
-                $addToSet:{downvotes:userId}
+            const updatedQuestionDetails=await Question.findByIdAndUpdate(
+                questionId,query,{new:true}
+            );
+            if(!updatedQuestionDetails){
+                throw new Error("Question not found");
             }
-        }else{
-            query={$addToSet:{downvotes:userId}}
-        };
 
-        const updatedQuestionDetails=await Question.findByIdAndUpdate(
-            questionId,query,{new:true}
-        );
-        if(!updatedQuestionDetails){
-            throw new Error("Question not found");
+            await User.findByIdAndUpdate(question.author, {
+                $inc: { reputation: hasupVoted ? -10 : 10 }
+            });
+
+            revalidatePath(path);
         }
 
-        revalidatePath(path);
+        
     } catch (error:unknown) {
         console.log("error while upvoting question:",error);
         throw error;

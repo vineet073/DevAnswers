@@ -1,3 +1,4 @@
+
 import LocalSearchBar from '@/components/common/SearchBars/LocalSearchBar'
 import React from 'react'
 import { UserFilters } from '@/constants/filterData'
@@ -5,10 +6,15 @@ import Filters from '@/components/common/Filters/Filters'
 import { getAllUser } from '@/lib/controllers/user.actions'
 import UserCard from '@/components/common/UserCard'
 import Link from 'next/link'
+import { SearchParamsProps } from '@/types/types'
+import Pagination from '@/components/common/Pagination/Pagination'
 
-const page = async() => {
+const page = async({searchParams}:SearchParamsProps) => {
+    const searchQuery=searchParams.q;
+    const filter=searchParams.filter;
+    const page = searchParams?.page ? +searchParams.page : 1;
 
-    const result=await getAllUser({});
+    const result=await getAllUser({searchQuery,filter,page});
 
   return (
     <div>
@@ -17,7 +23,7 @@ const page = async() => {
 
         <div className="flex gap-4 max-sm:flex-col sm:items-center">
             <LocalSearchBar
-                route="/"
+                route="/community"
                 iconPosition="left"
                 imgSrc="/assets/icons/search.svg"
                 placeholder="Search for questions"
@@ -45,6 +51,10 @@ const page = async() => {
                     </div>
                 )
             }
+        </div>
+
+        <div className='mt-10'>
+            <Pagination pageNumber={page} isNext={result.isNext}/>
         </div>
 
     </div>

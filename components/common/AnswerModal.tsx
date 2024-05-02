@@ -16,12 +16,12 @@ interface propsType{
 
 const AnswerModal = ({key,answer,userID}:propsType) => {
   return (
-    <div>
+    <div className='mb-5'>
       <div className='mb-4 flex justify-between max-sm:flex-col-reverse'>
         <Link className='flex gap-3' href={`/profile/${(answer.author as IUser).clerkId}`}>
           <div className='flex gap-1'>
             <Image src={(answer.author as IUser).picture} alt='profilePic'
-            width={22} height={22} className='rounded-full'/>
+            width={24} height={24} className='rounded-full'/>
             <p className='text-dark300_light900 font-semibold'>{(answer.author as IUser).name}</p>
           </div>
           
@@ -32,6 +32,8 @@ const AnswerModal = ({key,answer,userID}:propsType) => {
         </Link>
 
         <div className='flex justify-end text-white max-sm:w-full'>
+          {
+            (answer.author as IUser)._id.toString() !== JSON.parse(userID).toString() && (
               <Vote
                 type='answer'
                 itemID={JSON.stringify(answer._id)}
@@ -41,6 +43,9 @@ const AnswerModal = ({key,answer,userID}:propsType) => {
                 hasUpVoted={answer.upvotes.includes(JSON.parse(userID))}
                 hasDownVoted={answer.downvotes.includes(JSON.parse(userID))}
               />
+            )
+          }
+              
         </div>
       </div>
       <ParseHTML data={answer.content}/>

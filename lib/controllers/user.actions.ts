@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 'use server'
 
 import User from "@/models/user.model";
@@ -8,6 +9,9 @@ import { FilterQuery } from "mongoose";
 import Question from "@/models/question.model";
 import Tag from "@/models/tag.model";
 import Answer from "@/models/answer.model";
+import { BadgeCriteriaType } from "@/types/types";
+import { count } from "console";
+import { assignBadges } from "../utility";
 
 
 export async function createUser(userData:CreateUserParams){
@@ -65,7 +69,54 @@ export async function getProfileData(params:GetUserByIdParams){
         const questionCount=await Question.countDocuments({author:user._id});
         const answerCount=await Answer.countDocuments({author:user._id});
 
-        return{user,questionCount,answerCount};
+        const questionUpVotes=await Question.aggregate([
+            {
+                $match:{author:user._id}
+            },
+            {
+                $group:{
+                    _id:null,
+                    totalUpvotes:{$sum:{$size:"$upvotes"}}
+                }
+            }
+        ]);
+        console.log("questionUpVotes:",questionUpVotes);
+
+        const totalAnswerUpvotes=await Answer.aggregate([
+            {
+                $match:{author:user._id}
+            },
+            {
+                $group:{
+                    _id:null,
+                    totalUpvotes:{$sum:{$size:"$upvotes"}}
+                }
+            }
+        ]);
+
+        const questionViews=await Question.aggregate([
+            {
+                $match:{author:user._id}
+            },
+            {
+                $group:{
+                    _id:null,
+                    totalViews:{$sum:"$views"}
+                }
+            }
+        ]);
+
+        const criteria=[
+            {type:"QUESTION_COUNT" as BadgeCriteriaType, count:questionCount},
+            {type:"ANSWER_COUNT" as BadgeCriteriaType, count:answerCount},
+            {type:"QUESTION_UPVOTES" as BadgeCriteriaType, count:questionUpVotes[0]?.totalUpvotes || 0},
+            {type:"ANSWER_UPVOTES" as BadgeCriteriaType, count:totalAnswerUpvotes[0]?.totalUpvotes || 0},
+            {type:"TOTAL_VIEWS" as BadgeCriteriaType, count:questionViews[0]?.totalViews || 0}
+        ]
+
+        const badgeCounts=assignBadges({criteria});
+
+        return{user,questionCount,answerCount,badgeCounts,reputation:user.reputation};
     } catch (error) {
         console.log("error while getting profile data:",error);
         throw error;
@@ -73,12 +124,47 @@ export async function getProfileData(params:GetUserByIdParams){
 }
 
 export async function getAllUser(params:GetAllUsersParams){
+    const{searchQuery,filter,page=1,pageSize=10}=params;
+    // const actualPage = searchQuery ? 1 : page || 1;
+    const skipAmount = (page - 1) * pageSize;
     try {
         connectDatabase();
+        const query:FilterQuery<typeof User>={};
+        if(searchQuery){
+            query.$or=[
+                {name:{$regex:new RegExp(searchQuery,'i')}},
+                {username:{$regex:new RegExp(searchQuery,'i')}}
+            ]
+        }
 
-        const users=await User.find({});
+        let sortOptions={};
 
-        return {users};
+        switch(filter){
+            case 'new_users':
+                sortOptions={joinAt:-1};
+                break;
+            
+            case 'old_users':
+                sortOptions={joinAt:1};
+                break;
+            
+            case 'top_contributors':
+                sortOptions={reputation:-1};
+                break;
+            
+            default:
+                break;
+        }
+
+        const users=await User.find(query)
+        .skip(skipAmount)
+        .limit(pageSize)
+        .sort(sortOptions);
+
+        const totalUsers=await User.countDocuments(query);
+        const isNext=totalUsers > users.length + skipAmount;
+
+        return {users,isNext};
     } catch (error) {
         console.log("error while getting all users:",error);
         throw error;
@@ -118,17 +204,48 @@ export async function saveQuestion(params:ToggleSaveQuestionParams){
 
 export async function fetchSavedQuestions(params:GetSavedQuestionsParams){
     const {clerkId,page=1,pageSize=10,filter,searchQuery}=params;
+    // const actualPage = searchQuery ? 1 : page || 1;
+    const skipAmount = (page - 1) * pageSize;
 
     const query:FilterQuery<typeof Question>=searchQuery?
     {title:{$regex:new RegExp(searchQuery,'i')}}
     :{};
+
+    let sortOptions={};
+    switch(filter){
+        case 'most_recent':
+            sortOptions={createdAt:-1};
+            break;
+        
+        case 'oldest':
+            sortOptions={createdAt:1};
+            break;
+        
+        case 'most_voted':
+            sortOptions={upvotes:-1};
+            break;
+        
+        case 'most_viewed':
+            sortOptions={views:-1};
+            break;
+        
+        case 'most_answered':
+            sortOptions = { answers: -1 };
+            break;
+        
+        default:
+            break;
+        
+    }
 
     const updatedUser=await User.findOne({clerkId}).populate({
         path:'saved',
         model:Question,
         match:query,
         options:{
-            createdAt:-1
+            sort:sortOptions,
+            skip:skipAmount,
+            limit:pageSize
         },
         populate:[
             {path:"tags", model:Tag},
@@ -140,7 +257,11 @@ export async function fetchSavedQuestions(params:GetSavedQuestionsParams){
         throw new Error('User not found');
     }
     const savedQuestions=updatedUser.saved;
-    return {savedQuestions};
+
+    const totalSavedQuestions=await User.countDocuments(query);
+    const isNext=totalSavedQuestions > savedQuestions.length + skipAmount;
+
+    return {savedQuestions,isNext};
     
 }
 

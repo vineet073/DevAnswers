@@ -1,3 +1,5 @@
+import { BADGE_CRITERIA } from "@/constants";
+import { BadgeCounts } from "@/types/types";
 import qs from "query-string";
 
 export const getTimestamp = (createdAt: Date): string => {
@@ -60,34 +62,68 @@ interface props{
   value:string|null;
 }
 export function formUrlQuery({params,key,value}:props):string{
-  const currentUrl=qs.parse(params);
-  currentUrl[key]=value;
+  const currentQuery=qs.parse(params);
+  currentQuery[key]=value;
 
-  return qs.stringifyUrl({
-    url:window.location.pathname,
-    query:currentUrl
-  },{
-    skipNull:true
-  })
-
+  return qs.stringifyUrl(
+    {
+      url:window.location.pathname,
+      query:currentQuery
+    },
+    {
+      skipNull:true
+    }
+  )
 }
 
 interface RemoveQueryProps{
   params:string;
   keys:string[];
 }
-export function removeUrlQuery({params,keys}:RemoveQueryProps):string{
-  const currentUrl=qs.parse(params);
+export function removeUrlQuery({params,keys}:RemoveQueryProps):string {
+  const currentQuery=qs.parse(params);
 
   keys.forEach(key=>{
-    delete currentUrl[key]
+    delete currentQuery[key]
   });
 
-  return qs.stringifyUrl({
-    url:window.location.pathname,
-    query:currentUrl
-  },{
-    skipNull:true
-  })
+  return qs.stringifyUrl(
+    {
+      url:window.location.pathname,
+      query:currentQuery
+    },
+    {
+      skipNull:true
+    }
+  )
 
+}
+
+
+interface BadgeParmas{
+  criteria:{
+    type:keyof typeof BADGE_CRITERIA;
+    count:number
+  }[];
+}
+export function assignBadges(params:BadgeParmas){
+  const badgeCounts:BadgeCounts={
+    BRONZE:0,
+    SILVER:0,
+    GOLD:0
+  };
+  const {criteria}=params;
+
+  criteria.forEach((item)=>{
+    const {type,count}=item;
+    const badgeLevel:any=BADGE_CRITERIA[type];
+    
+    Object.keys(badgeLevel).forEach((level)=>{
+      if(count>=badgeLevel[level]){
+        badgeCounts[level as keyof BadgeCounts]+=1;
+      }
+    });
+  });
+
+  return badgeCounts;
 }

@@ -12,7 +12,7 @@ const QuestionTab = async(params:QuestionTabProps) => {
     const {userId,clerkId}=params;
     const result=await getQuestionsByUserId({userId});
   return (
-    <div>
+    <div className='mt-5 flex flex-col gap-4'>
         {
              result.questions.map((item)=>(
                 <QuestionCard
@@ -21,7 +21,7 @@ const QuestionTab = async(params:QuestionTabProps) => {
                 title={item.title}
                 tags={item.tags}
                 author={item.author}
-                upvotes={item.upvotes}
+                upvotes={item.upvotes.length}
                 views={item.views}
                 createdAt={item.createdAt}
                 answers={item.answers}

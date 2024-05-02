@@ -10,20 +10,21 @@ import { getAnswerByQId } from '@/lib/controllers/answer.actions';
 import { getQuestionsById } from '@/lib/controllers/question.action'
 import { getUserByClerkId } from '@/lib/controllers/user.actions';
 import { formatAndDivideNumber, getTimestamp } from '@/lib/utility';
+import { URLProps } from '@/types/types';
 import { auth } from '@clerk/nextjs';
 import Image from 'next/image'
 import React from 'react'
 
-const page = async({params}:any) => {
+const page = async({params,searchParams}:URLProps) => {
+  const questionId=params.question_id;
+  const {question}=await getQuestionsById({questionId});
 
-    const questionId=params.question_id;
-    const {question}=await getQuestionsById({questionId});
-    const answers=await getAnswerByQId({questionId});
+  const sortBy=searchParams.filter;
+  const page = searchParams?.page ? +searchParams.page : 1;
+  const answers=await getAnswerByQId({questionId,sortBy,page});
 
-    const {userId}=auth();
-
-      const user=await getUserByClerkId(userId);
-
+  const {userId}=auth();
+  const user=await getUserByClerkId(userId);
 
   return (
     <div className=''>
@@ -41,7 +42,9 @@ const page = async({params}:any) => {
         </div>
 
         <div className='flex justify-end max-sm:w-full'>
-            <div className='text-dark300_light700'>
+          {
+            user._id.toString() !==question?.author._id.toString() && (
+              <div className='text-dark300_light700'>
                 <Vote
                 type='question'
                 itemID={JSON.stringify(questionId)}
@@ -54,6 +57,9 @@ const page = async({params}:any) => {
                 />
 
             </div>
+            ) 
+          }
+            
         </div>
       </div>
 
@@ -111,8 +117,12 @@ const page = async({params}:any) => {
         </div>
         
       </div>
-
-      <AnswerForm questionID={JSON.stringify(questionId)} question={question.content} authorID={JSON.stringify(question.author._id)}/>
+      
+      {
+        user._id.toString() !==question?.author._id.toString() && (
+          <AnswerForm questionID={JSON.stringify(questionId)} question={question.content} authorID={JSON.stringify(user._id)}/>
+        )
+      }
     </div>
   )
 }

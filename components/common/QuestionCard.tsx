@@ -3,7 +3,7 @@ import React from 'react';
 import RenderTags from './RenderTags/RenderTags';
 import Metric from './Metric';
 import Link from 'next/link';
-import { SignedIn } from '@clerk/nextjs';
+import { SignedIn, auth } from '@clerk/nextjs';
 import ActionButtons from './ActionButtons';
 
 interface propsType{
@@ -29,6 +29,7 @@ const QuestionCard = ({
     createdAt,
     clerkId
   }: propsType) => {
+    const {userId:currentClerkId}=auth();
     const showActionButtons=clerkId && clerkId===author.clerkId;
   return (
     <div className='background-light900_dark200 flex flex-col rounded-lg p-7 shadow-sm'>
@@ -39,7 +40,7 @@ const QuestionCard = ({
         </Link>
 
         <SignedIn>
-          {showActionButtons && (
+          {showActionButtons && (currentClerkId===clerkId)&& (
             <ActionButtons type='question' itemId={_id}/>
           )}
         </SignedIn>
@@ -60,11 +61,11 @@ const QuestionCard = ({
 
       <div className='flex justify-between gap-2 max-md:flex-col'>
         <Metric
-          imgUrl={author.picture}
+          imgUrl={author?.picture}
           alt="User"
-          value={author.name}
+          value={author?.name}
           title={` - asked ${getTimestamp(createdAt)}`}
-          href={`/profile/${author._id}`}
+          href={`/profile/${author?._id}`}
           isAuthor
           textStyles="body-medium text-dark400_light700"
         />

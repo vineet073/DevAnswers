@@ -43,6 +43,6 @@ const answerSchema = new Schema<IAnswer>({
   }
 });
 
-const Answer = models.Answer || model('Answer', answerSchema);
+const Answer = models?.Answer || model('Answer', answerSchema);
 
 export default Answer;

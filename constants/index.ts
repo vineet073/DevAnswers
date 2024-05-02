@@ -47,14 +47,14 @@ export const sidebarLinks:SidebarLink[] = [
 
 export const BADGE_CRITERIA = {
   QUESTION_COUNT: {
-    BRONZE: 10,
-    SILVER: 50,
+    BRONZE: 5,
+    SILVER: 30,
     GOLD: 100,
   },
   ANSWER_COUNT: {
-    BRONZE: 10,
-    SILVER: 50,
-    GOLD: 100,
+    BRONZE: 5,
+    SILVER: 20,
+    GOLD: 50,
   },
   QUESTION_UPVOTES: {
     BRONZE: 10,
@@ -67,8 +67,8 @@ export const BADGE_CRITERIA = {
     GOLD: 100,
   },
   TOTAL_VIEWS: {
-    BRONZE: 1000,
-    SILVER: 10000,
-    GOLD: 100000,
+    BRONZE: 100,
+    SILVER: 250,
+    GOLD: 450,
   },
 };

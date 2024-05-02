@@ -1,6 +1,7 @@
 import Filters from "@/components/common/Filters/Filters";
 import HomeFilters from "@/components/common/Filters/HomeFilters";
 import NoResult from "@/components/common/NoResult/NoResult";
+import Pagination from "@/components/common/Pagination/Pagination";
 import QuestionCard from "@/components/common/QuestionCard";
 import LocalSearchBar from "@/components/common/SearchBars/LocalSearchBar";
 import { Button } from "@/components/ui/button";
@@ -11,9 +12,12 @@ import Link from "next/link";
 
 
 export default async function Home({searchParams}:SearchParamsProps) {
-  const searchQuery=searchParams.q;
-  
-  const result=await getQuestions({searchQuery});
+  const searchQuery = searchParams.q;
+
+  const filter = searchParams.filter;
+  const page = searchParams?.page ? +searchParams.page : 1;
+
+  const result = await getQuestions({ searchQuery, filter, page });
 
   return (
     <div className="flex w-full flex-col gap-9">
@@ -72,7 +76,9 @@ export default async function Home({searchParams}:SearchParamsProps) {
         )}
       </div>
 
-      
+      <div>
+        <Pagination pageNumber={page} isNext={result.isNext}/>
+      </div>
     </div>
   )
 }

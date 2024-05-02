@@ -1,22 +1,27 @@
 import Filters from '@/components/common/Filters/Filters'
-import HomeFilters from '@/components/common/Filters/HomeFilters'
 import NoResult from '@/components/common/NoResult/NoResult'
+import Pagination from '@/components/common/Pagination/Pagination'
 import QuestionCard from '@/components/common/QuestionCard'
 import LocalSearchBar from '@/components/common/SearchBars/LocalSearchBar'
 import { QuestionFilters } from '@/constants/filterData'
 import { fetchSavedQuestions } from '@/lib/controllers/user.actions'
+import { SearchParamsProps } from '@/types/types'
 import { auth } from '@clerk/nextjs'
 import { redirect } from 'next/navigation'
 import React from 'react'
 
-const CollectionPage = async() => {
+const CollectionPage = async({searchParams}:SearchParamsProps) => {
 
     const {userId}=auth();
     if(!userId){
         redirect('/login');
     }
+    const searchQuery=searchParams.q;
+    const filter=searchParams.filter;
+    const page = searchParams?.page ? +searchParams.page : 1;
 
-    const result=await fetchSavedQuestions({clerkId:userId});
+
+    const result=await fetchSavedQuestions({clerkId:userId,searchQuery,filter,page});
 
   return (
     <div className="flex w-full flex-col gap-9">
@@ -27,7 +32,7 @@ const CollectionPage = async() => {
 
       <div className="flex gap-4 max-sm:flex-col sm:items-center">
         <LocalSearchBar
-          route="/"
+          route="/collection"
           iconPosition="left"
           imgSrc="/assets/icons/search.svg"
           placeholder="Search for questions"
@@ -37,11 +42,11 @@ const CollectionPage = async() => {
         <Filters
         filter={QuestionFilters}
         otherClasses='min-h-[56px] sm:min-w-[170px]'
-        containerClasses='max-md:flex hidden'
+        containerClasses=''
         />
       </div>
 
-      <HomeFilters/>
+      {/* <HomeFilters/> */}
 
       <div className="flex flex-col gap-7">
         { result.savedQuestions.length === 0 ? (
@@ -65,6 +70,10 @@ const CollectionPage = async() => {
             answers={item.answers}/>
           ))          
         )}
+      </div>
+
+      <div>
+        <Pagination isNext={result.isNext} pageNumber={page}/>
       </div>
     
   </div>

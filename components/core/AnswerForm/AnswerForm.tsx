@@ -59,7 +59,7 @@ const AnswerForm = ({authorID,questionID,question}:propsType) => {
   return (
     <div className='mt-14'>
         <div className='mb-5 flex items-center justify-between'>
-            <h4 className='text-dark100_light900 font-semibold text-xl'>Explain your answer</h4>
+            <h4 className='text-dark100_light900 text-xl font-semibold'>Explain your answer</h4>
 
             <Button className='background-light800_dark400 flex gap-2 border-none'>
                 <Image
