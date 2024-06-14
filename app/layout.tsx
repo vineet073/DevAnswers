@@ -8,8 +8,8 @@ import type { Metadata } from "next";
 import { ThemeProvider } from "@/context/ThemeContext/ThemeProvider";
 
 export const metadata: Metadata = {
-  title: "DevOverflow",
-  description: "Community for asking dev related questions",
+  title: "DevAnswers",
+  description: "Simple and to the point, it implies that the platform is a place where developers can get answers to their technical questions.",
   icons: {
     icon: "/assets/images/site-logo.svg",
   },

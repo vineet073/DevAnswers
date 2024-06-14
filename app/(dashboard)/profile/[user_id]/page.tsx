@@ -34,9 +34,13 @@ const ProfilePage = async({params,searchParams}:URLProps) => {
                 <div className='flex w-full justify-between max-sm:flex-col-reverse'>
                     <p className='text-2xl font-semibold'>{userInfo.user.name}</p>
                     <div className='flex justify-end max-sm:w-full'>
-                        <Button className='background-light800_dark400 text-dark300_light900 text-md px-8 '>
-                            {clerkId===userInfo.user.clerkId && 'Edit Profile'}
-                        </Button>
+                        {
+                            clerkId===userInfo.user.clerkId && 
+                            <Button className='background-light800_dark400 text-dark300_light900 text-md px-8 '>
+                                Edit Profile
+                            </Button>
+                        }
+                        
                     </div>
                     
                 </div>
